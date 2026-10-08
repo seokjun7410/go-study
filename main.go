@@ -1,19 +1,15 @@
 package main
 
-import (
-	"fmt"
-	"net/http"
-)
+import "github.com/gin-gonic/gin"
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, Go web Server!")
-}
 func main() {
-	http.HandleFunc("/", helloHandler)
-	fmt.Println("서버가 9100포트에서 시작되었습니다.")
+	engine := gin.Default()
 
-	err := http.ListenAndServe(":9100", nil)
-	if err != nil {
-		fmt.Println("서버 실행 실패: ", err)
-	}
+	engine.GET("/pgin", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Hello, Go Web Server!",
+		})
+	})
+
+	engine.Run(":9100")
 }
