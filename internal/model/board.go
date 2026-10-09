@@ -4,10 +4,14 @@ import "time"
 
 type Board struct {
 	ID        int       `json:"id,omitempty"`
-	Title     string    `json:"id,omitempty"`
-	Content   string    `json:"id,omitempty"`
-	Author    string    `json:"id,omitempty"`
-	CreatedAt time.Time `json:"id,omitempty"`
-	UpdatedAt time.Time `json:"id,omitempty"`
-	Code      string    `json:"code,omitempty"`
+	Title     string    `json:"title,omitempty"`
+	Content   string    `json:"content,omitempty"`
+	Author    string    `json:"author,omitempty"`
+	CreatedAt time.Time `json:"createdAt,omitempty"`
+	UpdatedAt time.Time `json:"updatedAt,omitempty"`
+	Code      string    `json:"code,omitempty" grom:"-"`
+}
+
+func (Board) TableName() string {
+	return "board"
 }
