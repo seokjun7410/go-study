@@ -11,11 +11,14 @@ func main() {
 
 	boardRepo := repository.NewBoardRepository(repository.DB)
 	boardService := service.NewBoardService(boardRepo)
+	compRepo := repository.NewCompRepository(repository.DB)
+	authService := service.NewAuthService(compRepo)
 
 	r := gin.Default()
 
 	r.POST("/board/add", boardService.RegisterBoard)
 	r.GET("/board/get/:id", boardService.GetBoardByID)
+	r.POST("/auth/token", authService.MakeToken)
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
