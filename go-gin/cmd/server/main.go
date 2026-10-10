@@ -9,7 +9,7 @@ import (
 
 func main() {
 	cfg, err := util.LoadConfig("config/config.yaml")
-	if error != nil {
+	if err != nil {
 		panic(err)
 	}
 
