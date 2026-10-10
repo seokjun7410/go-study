@@ -8,7 +8,12 @@ import (
 )
 
 func main() {
-	util.InitZapLogger()
+	cfg, err := util.LoadConfig("config/config.yaml")
+	if error != nil {
+		panic(err)
+	}
+
+	util.InitZapLogger(cfg)
 	repository.InitDb()
 
 	boardRepo := repository.NewBoardRepository(repository.DB)

@@ -5,11 +5,12 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
+	"path/filepath"
 )
 
 var logger *zap.Logger
 
-func InitZapLogger() {
+func InitZapLogger(cfg Config) {
 	if err := os.MkdirAll("logs", 0o755); err != nil {
 		panic(err)
 	}
@@ -21,27 +22,27 @@ func InitZapLogger() {
 	encoder := zapcore.NewConsoleEncoder(encoderConfig)
 
 	debugWriter := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   "logs/debug.log",
-		MaxSize:    100,
-		MaxBackups: 7,
-		MaxAge:     30,
-		Compress:   true,
+		Filename:   filepath.Join(cfg.Directory, cfg.Files.Debug),
+		MaxSize:    cfg.Rotation.MaxSize,
+		MaxBackups: cfg.Rotation.MaxBackups,
+		MaxAge:     cfg.Rotation.MaxAge,
+		Compress:   cfg.Rotation.Compress,
 	})
 
 	infoWriter := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   "logs/info.log",
-		MaxSize:    100,
-		MaxBackups: 7,
-		MaxAge:     30,
-		Compress:   true,
+		Filename:   filepath.Join(cfg.Directory, cfg.Files.Info),
+		MaxSize:    cfg.Rotation.MaxSize,
+		MaxBackups: cfg.Rotation.MaxBackups,
+		MaxAge:     cfg.Rotation.MaxAge,
+		Compress:   cfg.Rotation.Compress,
 	})
 
 	errorWriter := zapcore.AddSync(&lumberjack.Logger{
-		Filename:   "logs/error.log",
-		MaxSize:    100,
-		MaxBackups: 7,
-		MaxAge:     30,
-		Compress:   true,
+		Filename:   filepath.Join(cfg.Directory, cfg.Files.Error),
+		MaxSize:    cfg.Rotation.MaxSize,
+		MaxBackups: cfg.Rotation.MaxBackups,
+		MaxAge:     cfg.Rotation.MaxAge,
+		Compress:   cfg.Rotation.Compress,
 	})
 
 	consoleWriter := zapcore.Lock(os.Stdout)
