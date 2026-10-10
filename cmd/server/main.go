@@ -4,9 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-api/internal/repository"
 	"go-api/internal/service"
+	"go-api/pkg/util"
 )
 
 func main() {
+	util.InitZapLogger()
 	repository.InitDb()
 
 	boardRepo := repository.NewBoardRepository(repository.DB)

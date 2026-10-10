@@ -6,6 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"go-api/internal/model"
 	"go-api/internal/repository"
+	logging "go-api/pkg/util"
 	"strings"
 	"time"
 )
@@ -82,8 +83,12 @@ func (s *AuthService) AuthMiddleware() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(401, gin.H{"code": "401", "message": "Unauthorized"})
 			c.Abort()
+			logging.Error("Unauthorized access attempt: " + err.Error())
 			return
 		}
+
+		logging.Info("req Id: " + companyID)
+		logging.Debug("Header: " + authHeader)
 
 		c.Set("company", comp)
 		c.Next()
