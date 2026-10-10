@@ -15,6 +15,8 @@ func main() {
 	authService := service.NewAuthService(compRepo)
 
 	r := gin.Default()
+	authMiddleware := authService.AuthMiddleware()
+	r.Group("/", authMiddleware)
 
 	r.POST("/board/add", boardService.RegisterBoard)
 	r.GET("/board/get/:id", boardService.GetBoardByID)

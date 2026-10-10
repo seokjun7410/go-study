@@ -26,3 +26,10 @@ func (r *CompRepository) FindByID(id string) (*model.Comp, error) {
 func (r *CompRepository) Update(comp *model.Comp) error {
 	return r.db.Save(comp).Error
 }
+
+func (r *CompRepository) FindByIDAndToken(id, token string) (*model.Comp, error) {
+	var comp model.Comp
+
+	err := r.db.First(&comp, "id = ? AND token = ?", id, token).Error
+	return &comp, err
+}

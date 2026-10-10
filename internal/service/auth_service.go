@@ -6,6 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"go-api/internal/model"
 	"go-api/internal/repository"
+	"strings"
 	"time"
 )
 
@@ -60,4 +61,31 @@ func (s *AuthService) MakeToken(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"code": "200", "data": comp})
+}
+
+func (s *AuthService) AuthMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		companyID := c.GetHeader("id")
+		authHeader := c.GetHeader("Authorization")
+		tokenString := ""
+		if strings.HasPrefix(authHeader, "bearer ") {
+			tokenString = strings.TrimPrefix(authHeader, "Bearer ")
+		}
+
+		if companyID == "" || tokenString == "" {
+			c.JSON(401, gin.H{"code": "401", "message": "Unauthorized"})
+			c.Abort()
+			return
+		}
+
+		comp, err := s.repo.FindByIDAndToken(companyID, tokenString)
+		if err != nil {
+			c.JSON(401, gin.H{"code": "401", "message": "Unauthorized"})
+			c.Abort()
+			return
+		}
+
+		c.Set("company", comp)
+		c.Next()
+	}
 }
